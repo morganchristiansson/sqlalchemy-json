@@ -62,8 +62,8 @@ class TrackedObject(object):
     is returned unchanged.
     """
     obj_type = type(obj)
-    for origin_type, replacement in cls._type_mapping.iteritems():
-      if obj_type is origin_type:
+    if obj_type in cls._type_mapping:
+        replacement = cls._type_mapping[obj_type]
         new = replacement(obj)
         new.parent = parent
         return new
@@ -75,16 +75,16 @@ class TrackedObject(object):
     return (cls.convert(item, parent) for item in iterable)
 
   @classmethod
-  def convert_iteritems(cls, iteritems, parent):
+  def convert_items(cls, items, parent):
     """Returns a generator like `convert_iterable` for 2-tuple iterators."""
-    return ((key, cls.convert(value, parent)) for key, value in iteritems)
+    return ((key, cls.convert(value, parent)) for key, value in items)
 
   @classmethod
   def convert_mapping(cls, mapping, parent):
     """Convenience method to track either a dict or a 2-tuple iterator."""
     if isinstance(mapping, dict):
-      return cls.convert_iteritems(mapping.iteritems(), parent)
-    return cls.convert_iteritems(mapping, parent)
+      return cls.convert_items(mapping.items(), parent)
+    return cls.convert_items(mapping, parent)
 
   def _repr(self):
     """Simple object representation."""
