@@ -12,20 +12,38 @@ from sqlalchemy_utils.types.json import JSONType
 from . import track
 
 
-class NestedMutable(mutable.MutableDict, track.TrackedDict):
-  """SQLAlchemy `mutable` extension dictionary with nested change tracking."""
-  def __setitem__(self, key, value):
-    """Ensure that items set are converted to change-tracking types."""
-    super(NestedMutable, self).__setitem__(key, self.convert(value, self))
+class NestedMutableDict(mutable.Mutable, track.TrackedDict):
+    @classmethod
+    def coerce(cls, key, value):
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, dict):
+            return cls(value)
+        return super(cls).coerce(key, value)
 
-  @classmethod
-  def coerce(cls, key, value):
-    """Convert plain dictionary to NestedMutable."""
-    if isinstance(value, cls):
-      return value
-    if isinstance(value, dict):
-      return cls(value)
-    return super(cls).coerce(key, value)
+
+class NestedMutableList(mutable.Mutable, track.TrackedList):
+    @classmethod
+    def coerce(cls, key, value):
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, list):
+            return cls(value)
+        return super(cls).coerce(key, value)
+
+
+class NestedMutable(mutable.Mutable):
+    """SQLAlchemy `mutable` extension with nested change tracking."""
+    @classmethod
+    def coerce(cls, key, value):
+        """Convert plain dictionary to NestedMutable."""
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, dict):
+            return NestedMutableDict.coerce(key, value)
+        if isinstance(value, list):
+            return NestedMutableList.coerce(key, value)
+        return super(cls).coerce(key, value)
 
 
 class JsonObject():
