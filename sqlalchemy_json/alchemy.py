@@ -19,7 +19,7 @@ class NestedMutableDict(mutable.Mutable, track.TrackedDict):
             return value
         if isinstance(value, dict):
             return cls(value)
-        return super(cls).coerce(key, value)
+        return super().coerce(key, value)
 
 
 class NestedMutableList(mutable.Mutable, track.TrackedList):
@@ -29,7 +29,7 @@ class NestedMutableList(mutable.Mutable, track.TrackedList):
             return value
         if isinstance(value, list):
             return cls(value)
-        return super(cls).coerce(key, value)
+        return super().coerce(key, value)
 
 
 class NestedMutable(mutable.Mutable):
@@ -43,7 +43,7 @@ class NestedMutable(mutable.Mutable):
             return NestedMutableDict.coerce(key, value)
         if isinstance(value, list):
             return NestedMutableList.coerce(key, value)
-        return super(cls).coerce(key, value)
+        return super().coerce(key, value)
 
 
 class JsonObject():
