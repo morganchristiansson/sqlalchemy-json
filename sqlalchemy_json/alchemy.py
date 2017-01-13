@@ -1,8 +1,8 @@
 # Third-party modules
 try:
-  import simplejson as json
+    import simplejson as json
 except ImportError:
-  import json
+    import json
 
 import sqlalchemy
 from sqlalchemy.ext import mutable
@@ -34,6 +34,7 @@ class NestedMutableList(mutable.Mutable, track.TrackedList):
 
 class NestedMutable(mutable.Mutable):
     """SQLAlchemy `mutable` extension with nested change tracking."""
+
     @classmethod
     def coerce(cls, key, value):
         """Convert plain dictionary to NestedMutable."""
@@ -47,11 +48,11 @@ class NestedMutable(mutable.Mutable):
 
 
 class JsonObject():
-  """JSON object type for SQLAlchemy with change tracking as base level."""
+    """JSON object type for SQLAlchemy with change tracking as base level."""
 
 
 class NestedJsonObject(JSONType):
-  """JSON object type for SQLAlchemy with nested change tracking."""
+    """JSON object type for SQLAlchemy with nested change tracking."""
 
 
 mutable.MutableDict.associate_with(JsonObject)
