@@ -12,14 +12,16 @@ import itertools
 import logging
 
 
+logger = logging.getLogger(__name__)
+
+
 class TrackedObject(object):
     """A base class for delegated change-tracking."""
     _type_mapping = {}
 
     def __init__(self, *args, **kwds):
-        self.logger = logging.getLogger(type(self).__name__)
         self.parent = None
-        self.logger.debug('%s: __init__', self._repr())
+        logger.debug('%s: __init__', self._repr())
         super(TrackedObject, self).__init__(*args, **kwds)
 
     def track_change(self, message=None, *args):
@@ -31,12 +33,12 @@ class TrackedObject(object):
         The message (if provided) will be debug logged.
         """
         if message is not None:
-            self.logger.debug('%s: %s', self._repr(), message % args)
-        self.logger.debug('%s: changed', self._repr())
+            logger.debug('%s: %s', self._repr(), message % args)
+        logger.debug('%s: changed', self._repr())
         if self.parent is not None:
             self.parent.track_change()
         elif hasattr(self, 'changed'):
-            self.logger.debug('%s: changed() called', self._repr())
+            logger.debug('%s: changed() called', self._repr())
             self.changed()
 
     @classmethod
