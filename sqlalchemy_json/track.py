@@ -11,7 +11,6 @@ counterparts is also included.
 import itertools
 import logging
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -159,6 +158,10 @@ class TrackedList(TrackedObject, list):
     def extend(self, iterable):
         self.track_change('extend: %r', iterable)
         super(TrackedList, self).extend(self.convert_iterable(iterable, self))
+
+    def remove(self, value):
+        self.track_change('remove: %r', value)
+        return super(TrackedList, self).remove(value)
 
     def pop(self, index):
         self.track_change('pop: %d', index)
