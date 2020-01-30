@@ -34,7 +34,7 @@ class TrackedObject(object):
         if message is not None:
             logger.debug('%s: %s', self._repr(), message % args)
         logger.debug('%s: changed', self._repr())
-        if self.parent is not None:
+        if hasattr(self, 'parent') and self.parent is not None:
             self.parent.track_change()
         elif hasattr(self, 'changed'):
             logger.debug('%s: changed() called', self._repr())
